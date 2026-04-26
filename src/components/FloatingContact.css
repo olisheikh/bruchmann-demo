@@ -1,0 +1,117 @@
+.floating-contact {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── Row wrapper / link ── */
+.float-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  text-decoration: none;
+  animation: floatSlideIn 0.5s ease both;
+}
+.float-item:nth-child(1) { animation-delay: 0.08s; }
+.float-item:nth-child(2) { animation-delay: 0.16s; }
+.float-item:nth-child(3) { animation-delay: 0.24s; }
+.float-item:nth-child(4) { animation-delay: 0.32s; }
+
+@keyframes floatSlideIn {
+  from { opacity: 0; transform: translateX(56px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Icon — stays at the right edge ── */
+.float-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px 0 0 12px;
+  background: var(--item-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 0.2s ease,
+              box-shadow 0.25s ease;
+  box-shadow: -3px 3px 14px rgba(0, 0, 0, 0.22);
+}
+
+/* On hover: icon nudges left, label slides out from behind it */
+.float-item:hover .float-icon {
+  transform: translateX(-4px) scale(1.07);
+  filter: brightness(1.13);
+  box-shadow: -6px 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Label — hidden, slides LEFT on hover ── */
+.float-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  background: var(--item-color);
+  color: #fff;
+  height: 52px;
+  border-radius: 12px 0 0 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  /* collapsed */
+  max-width: 0;
+  padding: 0;
+  transition: max-width 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+              padding 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease;
+  box-shadow: none;
+  filter: brightness(1.06);
+}
+
+/* Expanded on hover */
+.float-item:hover .float-label {
+  max-width: 240px;
+  padding: 0 14px 0 20px;
+  box-shadow: -5px 4px 18px rgba(0, 0, 0, 0.22);
+}
+
+.float-label-main {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+}
+
+.float-label-sub {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+/* ── Mobile — circles at bottom-right, tap to act ── */
+@media (max-width: 540px) {
+  .floating-contact {
+    top: auto;
+    bottom: 80px;
+    right: 12px;
+    transform: none;
+    gap: 10px;
+  }
+  .float-icon {
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+  }
+  .float-label {
+    display: none;
+  }
+}

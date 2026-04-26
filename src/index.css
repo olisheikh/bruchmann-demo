@@ -1,0 +1,500 @@
+:root {
+  /* ── Brand palette ── */
+  --green: #13A538;
+  --green-dark: #0d7a29;
+  --green-light: #1fc548;
+  --navy: #00274E;
+  --navy-light: #003d75;
+  --gold: #FFC704;
+  --gray: #636366;
+  --gray-light: #9a9aa0;
+  --gray-ultra-light: #f4f4f6;
+  --white: #ffffff;
+  --black: #0a0a0b;
+
+  --font-display: 'Roboto', sans-serif;
+  --font-body: 'Open Sans', sans-serif;
+
+  --radius: 4px;
+  --radius-lg: 12px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Dark-first semantic tokens ── */
+  --bg: #001222;
+  --surface: #001e38;
+  --surface-alt: #00274E;
+  --text: rgba(255,255,255,0.75);
+  --text-muted: rgba(255,255,255,0.48);
+  --text-heading: #ffffff;
+  --border-color: rgba(255,255,255,0.09);
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
+}
+
+/* ── Light mode — soft navy-tinted, easy on the eyes ── */
+[data-theme="light"] {
+  --bg: #eaf0f8;
+  --surface: #f4f8fd;
+  --surface-alt: #dde8f5;
+  --text: #3a4a60;
+  --text-muted: #5a6b82;
+  --text-heading: #00274E;
+  --border-color: rgba(0,39,78,0.1);
+  --shadow: 0 4px 24px rgba(0,39,78,0.08);
+  --shadow-lg: 0 16px 48px rgba(0,39,78,0.14);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+h1, h2 {
+  font-family: 'Roboto Slab', serif;
+  line-height: 1.1;
+}
+
+h3, h4, h5 {
+  font-family: var(--font-display);
+  line-height: 1.1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+  border: 2px solid transparent;
+}
+.btn-primary:hover {
+  background: var(--green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(19,165,56,0.3);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  border-radius: var(--radius);
+  border: 2px solid rgba(255,255,255,0.6);
+  transition: var(--transition);
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--white);
+}
+
+/* Glass button — works on any dark surface */
+.btn-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.07);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  transition: var(--transition);
+}
+.btn-dark:hover {
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.38);
+  transform: translateY(-2px);
+}
+[data-theme="light"] .btn-dark {
+  background: var(--navy);
+  border-color: transparent;
+  color: var(--white);
+}
+[data-theme="light"] .btn-dark:hover {
+  background: var(--navy-light);
+  border-color: transparent;
+}
+
+/* ── Electric rotating border — reusable on any button ── */
+.electric-border-wrap {
+  position: relative;
+  display: inline-flex;
+  border-radius: 9px;
+  padding: 1.5px;
+}
+.electric-border-wrap::before,
+.electric-border-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    transparent 0deg,
+    transparent 60deg,
+    #13A538 90deg,
+    #7fff00 110deg,
+    #fff 120deg,
+    #13A538 135deg,
+    transparent 160deg,
+    transparent 360deg
+  );
+  animation: electricSpin 2s linear infinite;
+}
+.electric-border-wrap::after {
+  filter: blur(6px);
+  opacity: 0.6;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes electricSpin {
+  to { --angle: 360deg; }
+}
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: var(--green);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-up {
+  animation: fadeUp 0.7s ease forwards;
+}
+
+/* ══ SCROLL REVEAL — global keyframe system ══════════════════════════════
+ * Trigger class is .sr-visible (added by main.jsx global observer).
+ * Using @keyframes so animation ALWAYS plays when class is added,
+ * regardless of React render timing. animation-fill-mode: both keeps
+ * the element hidden before the animation starts and visible after.
+ * ═════════════════════════════════════════════════════════════════════════ */
+
+/* ── keyframes ── */
+@keyframes srUp {
+  from { opacity: 0; transform: translateY(44px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes srLeft {
+  from { opacity: 0; transform: translateX(-54px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes srRight {
+  from { opacity: 0; transform: translateX(54px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes srScale {
+  from { opacity: 0; transform: scale(0.82); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes srBlur {
+  from { opacity: 0; transform: translateY(22px); filter: blur(10px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+@keyframes srFlip {
+  from { opacity: 0; transform: perspective(700px) rotateX(24deg) translateY(32px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── hidden state before animation ── */
+.reveal,
+.reveal-left,
+.reveal-right,
+.reveal-scale,
+.reveal-blur,
+.reveal-flip,
+.reveal-stagger > * {
+  opacity: 0;
+}
+
+/* ── animate in when .sr-visible is added ── */
+.reveal.sr-visible         { animation: srUp    0.72s cubic-bezier(0.22,1,0.36,1) both; }
+.reveal-left.sr-visible    { animation: srLeft  0.72s cubic-bezier(0.22,1,0.36,1) both; }
+.reveal-right.sr-visible   { animation: srRight 0.72s cubic-bezier(0.22,1,0.36,1) both; }
+.reveal-scale.sr-visible   { animation: srScale 0.65s cubic-bezier(0.34,1.56,0.64,1) both; }
+.reveal-blur.sr-visible    { animation: srBlur  0.75s ease both; }
+.reveal-flip.sr-visible    { animation: srFlip  0.68s cubic-bezier(0.22,1,0.36,1) both; }
+.reveal-stagger > *.sr-visible { animation: srUp 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ── stagger delays for nth-child sequence ── */
+.reveal-stagger > *:nth-child(1).sr-visible  { animation-delay: 0.00s; }
+.reveal-stagger > *:nth-child(2).sr-visible  { animation-delay: 0.09s; }
+.reveal-stagger > *:nth-child(3).sr-visible  { animation-delay: 0.18s; }
+.reveal-stagger > *:nth-child(4).sr-visible  { animation-delay: 0.27s; }
+.reveal-stagger > *:nth-child(5).sr-visible  { animation-delay: 0.36s; }
+.reveal-stagger > *:nth-child(6).sr-visible  { animation-delay: 0.45s; }
+.reveal-stagger > *:nth-child(7).sr-visible  { animation-delay: 0.54s; }
+.reveal-stagger > *:nth-child(8).sr-visible  { animation-delay: 0.63s; }
+.reveal-stagger > *:nth-child(9).sr-visible  { animation-delay: 0.72s; }
+.reveal-stagger > *:nth-child(10).sr-visible { animation-delay: 0.81s; }
+
+/* transition-delay pass-through for inline delay="" on individual cards */
+.reveal.sr-visible,
+.reveal-left.sr-visible,
+.reveal-right.sr-visible,
+.reveal-scale.sr-visible,
+.reveal-blur.sr-visible,
+.reveal-flip.sr-visible {
+  animation-delay: var(--sr-delay, 0s);
+}
+
+/* ══ 3D TILT — glare overlay injected by JS ══════════════════════════════ */
+[data-tilt] {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 20;
+}
+
+/* ══ 3D BUTTON PRESS ══════════════════════════════════════════════════════ */
+.btn-primary {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.btn-primary:hover {
+  transform: perspective(500px) translateZ(6px) translateY(-2px) !important;
+}
+.btn-primary:active {
+  transform: perspective(500px) translateZ(-3px) translateY(1px) !important;
+  transition: transform 0.05s ease !important;
+}
+
+/* ══ 3D FLOATING ORB — hero decoration ═══════════════════════════════════ */
+.hero-3d-orb {
+  position: absolute;
+  right: 3%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 340px;
+  height: 340px;
+  pointer-events: none;
+  z-index: 0;
+}
+.orb-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(19,165,56,0.35);
+  animation: orbRing1 10s linear infinite;
+}
+.orb-ring:nth-child(2) {
+  inset: 10%;
+  border-color: rgba(19,165,56,0.2);
+  animation: orbRing2 14s linear infinite reverse;
+}
+.orb-ring:nth-child(3) {
+  inset: 22%;
+  border-color: rgba(255,255,255,0.1);
+  animation: orbRing3 18s linear infinite;
+}
+.orb-ring:nth-child(4) {
+  inset: 36%;
+  border-color: rgba(19,165,56,0.15);
+  animation: orbRing1 8s linear infinite reverse;
+}
+.orb-core {
+  position: absolute;
+  inset: 44%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(19,165,56,0.4) 0%, rgba(19,165,56,0.05) 60%, transparent 100%);
+  animation: orbPulse 3s ease-in-out infinite;
+}
+.orb-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  top: calc(50% - 2.5px);
+  left: calc(50% - 2.5px);
+  box-shadow: 0 0 10px 4px rgba(19,165,56,0.5);
+  animation: orbPulse 3s ease-in-out infinite 0.4s;
+}
+
+@keyframes orbRing1 {
+  to { transform: rotate(360deg) rotateX(25deg); }
+}
+@keyframes orbRing2 {
+  to { transform: rotateX(55deg) rotateZ(360deg); }
+}
+@keyframes orbRing3 {
+  to { transform: rotateY(50deg) rotateZ(-360deg); }
+}
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1);   opacity: 0.8; }
+  50%       { transform: scale(1.4); opacity: 1; }
+}
+
+/* ══ 3D FLOATING PARTICLE DOTS — hero bg ════════════════════════════════ */
+.hero-3d-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.h3p {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: h3pFloat var(--dur, 12s) ease-in-out infinite var(--del, 0s);
+  opacity: 0;
+}
+@keyframes h3pFloat {
+  0%   { transform: translateY(0)     translateZ(0);   opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(-120px) translateZ(40px); opacity: 0; }
+}
+
+/* ══ 3D CARD ICON BOUNCE ══════════════════════════════════════════════════ */
+[data-tilt]:hover .why-card-icon,
+[data-tilt]:hover .karriere-benefit-icon,
+[data-tilt]:hover .home-map-detail-icon {
+  animation: iconBounce3d 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes iconBounce3d {
+  0%   { transform: perspective(300px) translateZ(0)   scale(1); }
+  50%  { transform: perspective(300px) translateZ(20px) scale(1.18); }
+  100% { transform: perspective(300px) translateZ(8px)  scale(1.08); }
+}
+
+/* ══ SCROLL PROGRESS BAR ══════════════════════════════════════════════════ */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--green) 0%, #7fff00 60%, var(--green-light) 100%);
+  z-index: 9999;
+  transition: width 0.08s linear;
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 8px rgba(19,165,56,0.6), 0 0 16px rgba(19,165,56,0.3);
+  pointer-events: none;
+}
+
+/* ══ COUNTER ANIMATION ════════════════════════════════════════════════════ */
+.count-up {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.count-up.sr-visible {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+@media (max-width: 400px) {
+  .container {
+    padding: 0 12px;
+  }
+}
+
+/* ══ RESPONSIVE — 3D EFFECTS ══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero-3d-orb        { display: none; }
+  .hero-3d-particles  { display: none; }
+  #scroll-progress    { height: 2px; }
+}
+@media (max-width: 480px) {
+  .btn-primary { padding: 12px 22px; font-size: 0.85rem; }
+  .btn-outline { padding: 11px 22px; font-size: 0.85rem; }
+  .btn-dark    { padding: 12px 22px; font-size: 0.85rem; }
+  .section     { padding: 60px 0; }
+}

@@ -1,0 +1,175 @@
+/* ── Screen ── */
+.loader-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #00274E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  opacity: 1;
+  visibility: visible;
+}
+.loader-screen.loader-hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Circuit grid background */
+.loader-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(19,165,56,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(19,165,56,0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  animation: gridPulse 2.5s ease-in-out infinite;
+}
+@keyframes gridPulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+/* ── Body ── */
+.loader-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  animation: bodyIn 0.5s ease both;
+}
+@keyframes bodyIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Ring wrapper ── */
+.loader-electric-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── SVG ring ── */
+.loader-ring {
+  position: absolute;
+  inset: 0;
+  width: 140px;
+  height: 140px;
+  transform: rotate(-90deg);
+}
+
+/* Track circle */
+.loader-ring-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.07);
+  stroke-width: 2.5;
+}
+
+/* Circumference of r=56: ~351.9 */
+/* The electric wave arc — draws in while turbulence distorts edges */
+.loader-ring-arc {
+  fill: none;
+  stroke: #13A538;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 351.9;
+  stroke-dashoffset: 351.9;
+  filter: drop-shadow(0 0 5px #13A538) drop-shadow(0 0 12px rgba(19,165,56,0.6));
+  animation: arcDraw 2.3s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+
+@keyframes arcDraw {
+  0%   { stroke-dashoffset: 351.9; opacity: 0.3; stroke: #1fcf4e; }
+  8%   { opacity: 1;   stroke-dashoffset: 310; stroke: #fff; }
+  12%  { stroke-dashoffset: 305; stroke: #13A538; opacity: 0.5; } /* surge stutter */
+  20%  { stroke-dashoffset: 260; opacity: 1;   stroke: #1fcf4e; }
+  35%  { stroke-dashoffset: 190; stroke: #13A538; }
+  50%  { stroke-dashoffset: 140; opacity: 0.6; stroke: #fff; }   /* flicker */
+  55%  { stroke-dashoffset: 130; opacity: 1;   stroke: #13A538; }
+  75%  { stroke-dashoffset: 60;  stroke: #1fcf4e; }
+  100% { stroke-dashoffset: 0;   opacity: 1;   stroke: #13A538; }
+}
+
+/* Bright dot that rotates continuously around the ring */
+.loader-ring-dot {
+  fill: #fff;
+  filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 8px #13A538);
+  transform-origin: 70px 70px;
+  animation: dotOrbit 1.1s linear 0.3s infinite;
+}
+@keyframes dotOrbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Logo — power-on flicker ── */
+.loader-logo {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  animation: powerOn 1s steps(1) 0.1s both;
+}
+@keyframes powerOn {
+  0%   { opacity: 0;   filter: brightness(0); }
+  15%  { opacity: 1;   filter: brightness(5)  drop-shadow(0 0 18px #1fcf4e); }
+  28%  { opacity: 0;   filter: brightness(0); }
+  45%  { opacity: 1;   filter: brightness(3)  drop-shadow(0 0 12px #13A538); }
+  58%  { opacity: 0;   filter: brightness(0); }
+  75%  { opacity: 1;   filter: brightness(2)  drop-shadow(0 0 8px #13A538); }
+  100% { opacity: 1;   filter: brightness(1.1) drop-shadow(0 0 6px rgba(19,165,56,0.5)); }
+}
+
+/* ── Progress bar ── */
+.loader-bar-track {
+  position: relative;
+  width: 155px;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.loader-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #0d7a2b, #13A538, #1fcf4e);
+  border-radius: 99px;
+  box-shadow: 0 0 8px rgba(19,165,56,0.9), 0 0 16px rgba(19,165,56,0.4);
+  animation: barFill 2.3s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+@keyframes barFill {
+  0%   { width: 0%; }
+  10%  { width: 14%; }
+  12%  { width: 9%;  } /* stutter */
+  22%  { width: 34%; }
+  24%  { width: 28%; } /* stutter */
+  50%  { width: 62%; }
+  52%  { width: 56%; } /* stutter */
+  80%  { width: 90%; }
+  100% { width: 100%; }
+}
+
+/* Bright pulse dot riding the bar edge */
+.loader-bar-pulse {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px #fff, 0 0 14px #13A538;
+  animation: pulseDot 2.3s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+@keyframes pulseDot {
+  0%   { left: 0%; }
+  100% { left: 100%; }
+}

@@ -1,0 +1,115 @@
+.kontakt-hero {
+  background: var(--navy);
+  padding: 160px 0 100px;
+  position: relative;
+  overflow: hidden;
+}
+.kontakt-hero-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(19,165,56,0.1) 0%, transparent 60%);
+}
+.kontakt-hero-inner { position: relative; z-index: 1; }
+.kontakt-hero-inner .section-label { color: var(--green); margin-bottom: 16px; }
+.kontakt-hero-inner .section-label::before { background: var(--green); }
+.kontakt-hero-inner h1 {
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  color: var(--white); font-weight: 800;
+  margin-bottom: 20px; letter-spacing: -0.02em;
+  animation: fadeUp 0.8s ease 0.2s both;
+}
+.kontakt-hero-inner p {
+  font-size: 1.05rem; color: rgba(255,255,255,0.65);
+  max-width: 560px; line-height: 1.75;
+  animation: fadeUp 0.8s ease 0.35s both;
+}
+
+.kontakt-section { background: var(--surface-alt); }
+.kontakt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.8fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.kontakt-info-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.kontakt-info-card h3 {
+  font-size: 1.1rem; font-weight: 700; color: var(--text-heading);
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+.kontakt-detail {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 24px;
+}
+.kontakt-detail svg { flex-shrink: 0; margin-top: 2px; }
+.kontakt-detail > div { display: flex; flex-direction: column; gap: 3px; }
+.kontakt-detail strong { font-size: 0.82rem; font-weight: 700; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-heading); }
+.kontakt-detail a, .kontakt-detail span { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; transition: var(--transition); }
+.kontakt-detail a:hover { color: var(--green); }
+
+.kontakt-form-wrap {
+  background: var(--surface);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+}
+.kontakt-form h3 { font-size: 1.2rem; font-weight: 700; color: var(--text-heading); margin-bottom: 28px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.form-group label { font-size: 0.82rem; font-weight: 600; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-heading); }
+.form-group input, .form-group select, .form-group textarea {
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--text);
+  background: var(--surface-alt);
+  transition: var(--transition);
+  outline: none;
+  width: 100%;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(19,165,56,0.1);
+  background: var(--surface);
+}
+.form-group textarea { resize: vertical; min-height: 140px; }
+.kontakt-submit { width: 100%; justify-content: center; margin-top: 8px; padding: 16px; font-size: 0.95rem; }
+
+.kontakt-success {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 48px 24px;
+}
+.kontakt-success-icon { margin-bottom: 20px; }
+.kontakt-success h3 { font-size: 1.5rem; color: var(--text-heading); margin-bottom: 10px; }
+.kontakt-success p { color: var(--text-muted); font-size: 0.95rem; max-width: 360px; }
+
+.reveal { opacity:0; transform:translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+@media (max-width: 900px) {
+  .kontakt-grid        { grid-template-columns: 1fr; }
+  .form-row            { grid-template-columns: 1fr; }
+  .kontakt-hero        { padding: 100px 0 60px; }
+}
+@media (max-width: 640px) {
+  .kontakt-hero        { padding: 90px 0 50px; }
+  .kontakt-hero-inner h1 { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+  .kontakt-hero-inner p  { font-size: 0.9rem; }
+  .kontakt-form-wrap   { padding: 24px 20px; }
+  .kontakt-info-card   { padding: 24px 20px; }
+}
+@media (max-width: 480px) {
+  .kontakt-hero-inner h1 { font-size: clamp(1.6rem, 8vw, 2.2rem); }
+  .kontakt-form-wrap   { padding: 20px 16px; }
+  .kontakt-submit      { padding: 14px; }
+}
