@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext'
+import { careerPageContent } from '../content/pageContent'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import './Karriere.css'
 
 export default function Karriere() {
-  const { t } = useLanguage()
+  const { lang, t } = useLanguage()
   useScrollReveal()
+  const copy = careerPageContent[lang] || careerPageContent.de
 
   const hero     = t('careers.hero')
   const benefits = t('careers.benefits')
@@ -25,11 +27,7 @@ export default function Karriere() {
             <h1>{hero.title}</h1>
             <p>{hero.description}</p>
             <div className="karriere-hero-stats">
-              {[
-                { v: '40+',  l: 'Years of excellence',   n: 40,  suffix: '+' },
-                { v: '25M+', l: 'Products manufactured', n: 25,  suffix: 'M+' },
-                { v: '100%', l: 'Made in Germany',       n: 100, suffix: '%' },
-              ].map((s, i) => (
+              {copy.stats.map((s, i) => (
                 <div key={i} className="karriere-hero-stat">
                   <strong
                     className="count-up"
@@ -45,10 +43,10 @@ export default function Karriere() {
           {/* Photo only */}
           <div className="karriere-hero-image">
             <div className="karriere-hero-img-frame">
-              <img src="/images/banners/employees.jpg" alt="Bruchmann Team" className="karriere-hero-img" />
+              <img src="/images/banners/employees.jpg" alt={copy.teamAlt} className="karriere-hero-img" />
               <div className="karriere-hero-img-badge">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                Bruchmann GmbH Team
+                {copy.teamBadge}
               </div>
             </div>
           </div>
@@ -85,7 +83,7 @@ export default function Karriere() {
                     <circle cx="5" cy="5" r="4" fill="var(--green)" opacity="0.25"/>
                     <circle cx="5" cy="5" r="2" fill="var(--green)"/>
                   </svg>
-                  Employee Story
+                  {copy.storyLabel}
                 </div>
                 <div className="karriere-bv-frame">
                   <div className="karriere-bv-glow" />
@@ -100,7 +98,7 @@ export default function Karriere() {
                 </div>
                 <div className="karriere-bv-quote">
                   <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M0 14V8.4C0 5.6 1.4 3.2 4.2 1.2L6 3.2C4.4 4.4 3.6 5.6 3.6 6.8H7V14H0ZM13 14V8.4C13 5.6 14.4 3.2 17.2 1.2L19 3.2C17.4 4.4 16.6 5.6 16.6 6.8H20V14H13Z" fill="currentColor"/></svg>
-                  <p>Real voices from our team — hear what it's like to grow with Bruchmann.</p>
+                  <p>{copy.storyQuote}</p>
                 </div>
               </div>
             </div>
@@ -160,7 +158,7 @@ export default function Karriere() {
             <p>{cta.subtitle}</p>
           </div>
           <Link
-            to={`/bewerbung?stelle=${encodeURIComponent('Unsolicited Application')}`}
+            to={`/bewerbung?stelle=${encodeURIComponent(copy.unsolicited)}`}
             className="btn-primary karriere-cta-btn"
           >
             {cta.btn}

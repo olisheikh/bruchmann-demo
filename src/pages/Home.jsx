@@ -133,6 +133,7 @@ export default function Home() {
   const productCards = t('home.product_cards')
   const aboutTeaser = t('home.about_teaser')
   const ctaBanner = t('home.cta_banner')
+  const location = t('home.location')
   const whyDiff = t('home.why_different')
 
   return (
@@ -386,9 +387,9 @@ export default function Home() {
       <section className="section home-map-section">
         <div className="container">
           <div className="section-header reveal-blur">
-            <div className="section-label">Our Location</div>
-            <h2 className="section-title">Visit Our Factory</h2>
-            <p className="section-sub">Located in the heart of Franconia — come see where over 25 million products have been manufactured since 1985.</p>
+            <div className="section-label">{location.label}</div>
+            <h2 className="section-title">{location.title}</h2>
+            <p className="section-sub">{location.subtitle}</p>
           </div>
 
           <div className="home-map-layout">
@@ -400,8 +401,12 @@ export default function Home() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
                 </div>
                 <div>
-                  <p className="home-map-detail-label">Address</p>
-                  <p className="home-map-detail-value">Am Steinernen Kreuz 8<br />96110 Scheßlitz, Bavaria</p>
+                  <p className="home-map-detail-label">{location.address_label}</p>
+                  <p className="home-map-detail-value">
+                    {location.address_value.split('\n').map((line, i) => (
+                      <span key={i}>{line}{i === 0 && <br />}</span>
+                    ))}
+                  </p>
                 </div>
               </div>
 
@@ -410,7 +415,7 @@ export default function Home() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.64A2 2 0 012 .96h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
                 </div>
                 <div>
-                  <p className="home-map-detail-label">Phone</p>
+                  <p className="home-map-detail-label">{location.phone_label}</p>
                   <a href="tel:+4995427736060" className="home-map-detail-value home-map-detail-link">+49 9542 7736-0</a>
                 </div>
               </div>
@@ -420,7 +425,7 @@ export default function Home() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                 </div>
                 <div>
-                  <p className="home-map-detail-label">Email</p>
+                  <p className="home-map-detail-label">{location.email_label}</p>
                   <a href="mailto:info@bruchmann-gmbh.de" className="home-map-detail-value home-map-detail-link">info@bruchmann-gmbh.de</a>
                 </div>
               </div>
@@ -430,8 +435,12 @@ export default function Home() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                 </div>
                 <div>
-                  <p className="home-map-detail-label">Office Hours</p>
-                  <p className="home-map-detail-value">Mon–Thu: 08:00–16:00<br />Fri: 08:00–14:00</p>
+                  <p className="home-map-detail-label">{location.hours_label}</p>
+                  <p className="home-map-detail-value">
+                    {location.hours_value.split('\n').map((line, i) => (
+                      <span key={i}>{line}{i === 0 && <br />}</span>
+                    ))}
+                  </p>
                 </div>
               </div>
 
@@ -442,7 +451,7 @@ export default function Home() {
                 className="btn-primary home-map-directions-btn"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-                Get Directions
+                {location.directions}
               </a>
             </div>
 
@@ -451,10 +460,10 @@ export default function Home() {
               <div className="home-map-glow" />
               <div className="home-map-badge">
                 <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="var(--green)" opacity="0.25"/><circle cx="5" cy="5" r="2" fill="var(--green)"/></svg>
-                Klaus Bruchmann GmbH
+                {location.map_badge}
               </div>
               <iframe
-                title="Klaus Bruchmann GmbH Location"
+                title={location.map_title}
                 src="https://maps.google.com/maps?q=Am+Steinernen+Kreuz+8,+96110+Sche%C3%9Flitz,+Germany&output=embed&z=15"
                 style={{border:'none',display:'block',width:'100%',height:'100%'}}
                 allowFullScreen

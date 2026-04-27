@@ -2,35 +2,13 @@ import { Suspense, useRef, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, OrbitControls, ContactShadows, Environment } from '@react-three/drei'
+import { useLanguage } from '../context/LanguageContext'
+import { productDetailContent } from '../content/pageContent'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import './Sicherungsschaltgeraete.css'
 
 const GLB = '/3D_images/fuse_combination_3D.glb'
 useGLTF.preload(GLB)
-
-const MODELS = [
-  { id: 'tytan-i',     name: 'TYTAN® I',              tagline: 'Universal fuse plug',       desc: 'Universal fuse plug with integrated blink indicator. Compatible with circuit breakers. Sealable.',             pdf: '/pdfs/tytan_I_datasheet_katalog.pdf',          tag: 'Popular'  },
-  { id: 'tytan-ii',    name: 'TYTAN® II',              tagline: 'Full-coded protection',     desc: 'Full coding for 1–63 A with continuous intermediate ratings (13, 32, 40 A). Plug-integrated blink indicator.', pdf: '/pdfs/tytan_II_datasheet_katalog-neu2.pdf',    tag: 'Flagship' },
-  { id: 'tytan-t',     name: 'TYTAN® T',               tagline: '4 HP compact unit',         desc: '4 HP width design with optional monitoring features. Load break switch for multiple fuse types.',             pdf: '/pdfs/tytan_T_datasheet_katalog-neu.pdf',      tag: null       },
-  { id: 'tytan-t4p',   name: 'TYTAN® T4P',             tagline: 'Multi-fuse load switch',    desc: 'Load break switch supporting DO 1 / DO 2 / DO 3 fuse types in a single compact 4 HP unit.',                 pdf: '/pdfs/tytan_T4p_datasheet_katalog.pdf',        tag: null       },
-  { id: 'tytan-t4h',   name: 'TYTAN® T4H/T4HP/T4HR',  tagline: 'Phase monitoring',          desc: 'Compact 4 HP width with integrated phase sequence and phase failure monitoring.',                            pdf: '/pdfs/t4h_p_r_datasheet_katalog.pdf',          tag: null       },
-  { id: 'tytan-th1',   name: 'TYTAN® TH1',             tagline: 'Fuse + temperature',        desc: 'Combines fuse protection with integrated temperature monitoring for early overload detection.',               pdf: '/pdfs/th1_datasheet_katalog.pdf',              tag: null       },
-  { id: 'tytan-thbus', name: 'TYTAN® THBus',           tagline: 'Modbus RTU interface',      desc: 'Monitors up to 28 devices simultaneously via Modbus RTU — ideal for smart building integration.',            pdf: '/pdfs/thbus_datasheet_katalog.pdf',            tag: 'Smart'    },
-  { id: 'coron-duo',   name: 'CORON® DUO',             tagline: '27 mm per-pole',            desc: '27 mm per-pole width with integrated auxiliary switch option. Modular and space-efficient design.',           pdf: '/pdfs/coron_duo_datasheet_katalog-neu.pdf',    tag: null       },
-  { id: 'coron-2',     name: 'CORON® 2',               tagline: 'Seal & lock',               desc: 'Sealable and lockable with padlock compatibility. Maximum protection against unauthorised access.',            pdf: '/pdfs/coron_2_datasheet_katalog.pdf',          tag: null       },
-  { id: 'in-on',       name: 'IN-ON',                  tagline: 'Push-button trip',          desc: 'Seal/lock capability with push-button trip release. Simple and safe operation for industrial use.',          pdf: '/pdfs/in-on_datasheet_katalog-update.pdf',     tag: null       },
-]
-
-const SPECS = [
-  { key: 'Product Series',    value: 'TYTAN®, CORON®, IN-ON' },
-  { key: 'Rated Current',     value: 'up to 100 A'           },
-  { key: 'Rated Voltage',     value: 'up to 690 V AC'        },
-  { key: 'Fuse Types',        value: 'DO 1, DO 2, DO 3'      },
-  { key: 'Protection Class',  value: 'IP20'                  },
-  { key: 'Mounting',          value: 'DIN Rail EN 60715'     },
-  { key: 'Temperature Range', value: '-25 °C to +55 °C'      },
-  { key: 'Certification',     value: 'CE, VDE, EN 60269'     },
-]
 
 /* ── 3D components ── */
 function RotatingFuse() {
@@ -63,8 +41,11 @@ function WireFallback() {
 
 export default function Sicherungsschaltgeraete() {
   useScrollReveal()
+  const { lang, t } = useLanguage()
   const [activePdf, setActivePdf] = useState(null)
   const [activePdfName, setActivePdfName] = useState('')
+  const content = productDetailContent[lang] || productDetailContent.de
+  const page = content.sicherungsschaltgeraete
 
   const openPdf = (pdf, name) => { setActivePdf(pdf); setActivePdfName(name) }
   const closePdf = () => { setActivePdf(null); setActivePdfName('') }
@@ -79,35 +60,35 @@ export default function Sicherungsschaltgeraete() {
 
           <div className="ssg-hero-text">
             <nav className="ssg-breadcrumb reveal" style={{'--sr-delay':'0s'}}>
-              <Link to="/">Home</Link>
+              <Link to="/">{t('productPage.breadcrumb_home')}</Link>
               <span>/</span>
-              <button className="ssg-bc-btn" onClick={() => { window.location.href = '/'; setTimeout(() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }), 150) }}>Products</button>
+              <button className="ssg-bc-btn" onClick={() => { window.location.href = '/'; setTimeout(() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }), 150) }}>{t('productPage.breadcrumb_products')}</button>
               <span>/</span>
-              <span>Fuse-Combination Units</span>
+              <span>{page.breadcrumbCurrent}</span>
             </nav>
 
-            <div className="section-label reveal-blur" style={{'--sr-delay':'0.08s'}}>TYTAN® · CORON® · IN-ON</div>
+            <div className="section-label reveal-blur" style={{'--sr-delay':'0.08s'}}>{page.heroLabel}</div>
             <h1 className="ssg-hero-h1 reveal-blur" style={{'--sr-delay':'0.18s'}}>
-              Fuse-Combination<br />
-              <span className="ssg-green">Units</span>
+              {page.heroTitle1}<br />
+              <span className="ssg-green">{page.heroTitle2}</span>
             </h1>
             <p className="ssg-hero-desc reveal" style={{'--sr-delay':'0.28s'}}>
-              Professional fuse switch disconnectors for DIN rails — featuring blink indicator, measuring plug and temperature monitoring. Klaus Bruchmann GmbH, since 1985.
+              {page.heroDesc}
             </p>
 
             <div className="ssg-hero-actions reveal" style={{'--sr-delay':'0.38s'}}>
               <Link to="/kontakt?produkt=Sicherungsschaltger%C3%A4te" className="btn-primary ssg-quote-btn">
-                Request a Quote
+                {t('productPage.request_btn')}
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </Link>
               <a href="#models" className="btn-dark">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                All Datasheets
+                {t('productPage.all_datasheets')}
               </a>
             </div>
 
             <div className="ssg-hero-badges reveal-stagger">
-              {['ISO 9001', 'ISO 14001', 'CE / VDE', 'Made in Germany'].map(b => (
+              {page.badges.map(b => (
                 <span key={b} className="ssg-badge">{b}</span>
               ))}
             </div>
@@ -121,7 +102,7 @@ export default function Sicherungsschaltgeraete() {
             <div
               className="ssg-canvas-wrap"
               onClick={() => document.getElementById('explorer')?.scrollIntoView({ behavior: 'smooth' })}
-              title="Click to explore the 3D model"
+              title={t('productPage.hint')}
             >
               <Canvas
                 camera={{ position: [0, 0.3, 9.0], fov: 38 }}
@@ -140,7 +121,7 @@ export default function Sicherungsschaltgeraete() {
             </div>
             <div className="ssg-3d-hint">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-              Click model · Open interactive viewer
+              {t('productPage.hint')}
             </div>
           </div>
         </div>
@@ -148,12 +129,7 @@ export default function Sicherungsschaltgeraete() {
 
       {/* ══ STATS BAR ══ */}
       <div className="ssg-stats-bar">
-        {[
-          { v: '10+',  l: 'Product Models'    },
-          { v: '100A', l: 'Max Rated Current' },
-          { v: '690V', l: 'Max Rated Voltage' },
-          { v: '1985', l: 'Year Founded'      },
-        ].map((s, i) => (
+        {page.stats.map((s, i) => (
           <div key={i} className="ssg-stat-item">
             <strong>{s.v}</strong>
             <span>{s.l}</span>
@@ -165,28 +141,28 @@ export default function Sicherungsschaltgeraete() {
       <section id="models" className="section ssg-models-section">
         <div className="container">
           <div className="section-header reveal-blur">
-            <div className="section-label">Complete Product Range</div>
-            <h2 className="section-title">TYTAN® &amp; CORON® Series</h2>
-            <p className="section-sub">10 specialist models from basic protection to smart Modbus-connected monitoring.</p>
+            <div className="section-label">{t('productPage.complete_range_label')}</div>
+            <h2 className="section-title">{page.rangeTitle}</h2>
+            <p className="section-sub">{page.rangeSub}</p>
             <div className="ssg-ds-strip">
               <div className="ssg-ds-strip-item">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                <strong>10</strong> Official PDF Datasheets
+                <strong>10</strong> {t('productPage.official_datasheets_label')}
               </div>
               <span className="ssg-ds-sep" />
               <div className="ssg-ds-strip-item">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/></svg>
-                View in browser
+                {t('productPage.view_in_browser')}
               </div>
               <span className="ssg-ds-sep" />
               <div className="ssg-ds-strip-item">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                Download directly
+                {t('productPage.download_directly')}
               </div>
             </div>
           </div>
           <div className="ssg-models-grid">
-            {MODELS.map((m, i) => (
+            {page.models.map((m, i) => (
               <div key={m.id} className="ssg-model-card reveal" style={{ '--sr-delay': `${i * 0.045}s` }}>
                 <div className="ssg-model-icon">
                   <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
@@ -203,7 +179,7 @@ export default function Sicherungsschaltgeraete() {
                 <div className="ssg-model-actions">
                   <button className="ssg-model-view" onClick={() => openPdf(m.pdf, m.name)}>
                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/></svg>
-                    View Datasheet
+                    {t('productPage.view_datasheet')}
                   </button>
                   <a href={m.pdf} download target="_blank" rel="noreferrer" className="ssg-model-dl">
                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -220,16 +196,16 @@ export default function Sicherungsschaltgeraete() {
         <div className="ssg-3d-glow" />
         <div className="container ssg-3d-layout">
           <div className="ssg-3d-text reveal">
-            <div className="section-label">Interactive Viewer</div>
-            <h2 className="ssg-3d-heading">Explore in 3D</h2>
-            <p className="ssg-3d-body">Inspect the fuse-combination unit from every angle. Drag, zoom and pan to examine the construction in detail.</p>
+            <div className="section-label">{t('productPage.viewer_label')}</div>
+            <h2 className="ssg-3d-heading">{t('productPage.explore_heading')}</h2>
+            <p className="ssg-3d-body">{page.explorerBody}</p>
             <ul className="ssg-3d-controls">
-              <li><span>⟳</span> Drag — Rotate</li>
-              <li><span>⊕</span> Scroll — Zoom</li>
-              <li><span>↕</span> Right-drag — Pan</li>
+              <li><span>⟳</span> {t('productPage.drag_rotate')}</li>
+              <li><span>⊕</span> {t('productPage.scroll_zoom')}</li>
+              <li><span>↕</span> {t('productPage.pan')}</li>
             </ul>
             <Link to="/kontakt?produkt=Sicherungsschaltger%C3%A4te" className="btn-primary ssg-quote-btn" style={{ marginTop: 28 }}>
-              Request Technical Info
+              {t('productPage.technical_info_btn')}
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </Link>
           </div>
@@ -237,7 +213,7 @@ export default function Sicherungsschaltgeraete() {
           <div className="ssg-3d-viewer reveal">
             <div className="ssg-viewer-badge">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-              TYTAN® Fuse-Combination Unit
+              {page.viewerBadge}
             </div>
             <Canvas camera={{ position: [0, 1.2, 5], fov: 44 }} gl={{ antialias: true }}>
               <color attach="background" args={['#060d18']} />
@@ -261,23 +237,23 @@ export default function Sicherungsschaltgeraete() {
         <div className="container">
           {/* Title centered above both columns */}
           <div className="section-header reveal">
-            <div className="section-label">Technical Data</div>
-            <h2 className="section-title">General Specifications</h2>
-            <p className="section-sub">Parameters across the TYTAN® &amp; CORON® family. Refer to individual datasheets for model-specific values.</p>
+            <div className="section-label">{t('productPage.specs_section_label')}</div>
+            <h2 className="section-title">{t('productPage.specs_section_title')}</h2>
+            <p className="section-sub">{page.specsSub}</p>
           </div>
           {/* Image + table, same height */}
           <div className="ssg-specs-layout reveal">
             <div className="ssg-specs-image-wrap">
-              <img src="/images/products/fust_combination.png" alt="Fuse-Combination Unit" className="ssg-specs-img" />
+              <img src="/images/products/fust_combination.png" alt={page.imageAlt} className="ssg-specs-img" />
               <div className="ssg-specs-img-overlay">
                 <span className="ssg-specs-cert">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#13A538" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  ISO 9001 · ISO 14001 Certified
+                  {page.certLabel}
                 </span>
               </div>
             </div>
             <div className="ssg-specs-table-wrap">
-              {SPECS.map((s, i) => (
+              {page.specs.map((s, i) => (
                 <div key={i} className="ssg-spec-row">
                   <span className="ssg-spec-key">{s.key}</span>
                   <span className="ssg-spec-val">{s.value}</span>
@@ -292,11 +268,11 @@ export default function Sicherungsschaltgeraete() {
       <section className="pp-cta">
         <div className="container pp-cta-inner reveal">
           <div>
-            <h2>Interested in Fuse-Combination Units?</h2>
-            <p>Our team will advise you personally — contact us today.</p>
+            <h2>{page.ctaTitle}</h2>
+            <p>{t('productPage.cta_body')}</p>
           </div>
           <Link to="/kontakt?produkt=Sicherungsschaltger%C3%A4te" className="btn-primary ssg-quote-btn">
-            Inquire Now
+            {t('productPage.inquire_btn')}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
@@ -311,14 +287,14 @@ export default function Sicherungsschaltgeraete() {
             <div className="ssg-pdf-header">
               <div className="ssg-pdf-title">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
-                {activePdfName} — Datasheet
+                {activePdfName} — {t('productPage.datasheet')}
               </div>
               <div className="ssg-pdf-header-actions">
                 <a href={activePdf} download target="_blank" rel="noreferrer" className="ssg-pdf-dl-btn">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  Download
+                  {t('productPage.download')}
                 </a>
-                <button className="ssg-pdf-close" onClick={closePdf} aria-label="Close">
+                <button className="ssg-pdf-close" onClick={closePdf} aria-label={lang === 'de' ? 'Schließen' : 'Close'}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round"/></svg>
                 </button>
               </div>
@@ -326,7 +302,7 @@ export default function Sicherungsschaltgeraete() {
             <iframe
               src={activePdf}
               className="ssg-pdf-frame"
-              title={`${activePdfName} Datasheet`}
+              title={`${activePdfName} ${t('productPage.datasheet')}`}
             />
           </div>
         </div>

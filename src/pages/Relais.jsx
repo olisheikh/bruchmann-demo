@@ -2,6 +2,8 @@ import { Suspense, useRef, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, OrbitControls, ContactShadows, Environment } from '@react-three/drei'
+import { useLanguage } from '../context/LanguageContext'
+import { productDetailContent } from '../content/pageContent'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import './Relais.css'
 
@@ -60,8 +62,10 @@ function WireFallback() {
 
 export default function Relais() {
   useScrollReveal()
+  const { lang, t } = useLanguage()
   const [activePdf, setActivePdf]         = useState(null)
   const [activePdfName, setActivePdfName] = useState('')
+  const page = (productDetailContent[lang] || productDetailContent.de).relais
 
   const openPdf  = (pdf, name) => { if (!pdf) return; setActivePdf(pdf); setActivePdfName(name) }
   const closePdf = () => { setActivePdf(null); setActivePdfName('') }
@@ -76,35 +80,33 @@ export default function Relais() {
 
           <div className="rl-hero-text">
             <nav className="rl-breadcrumb reveal" style={{'--sr-delay':'0s'}}>
-              <Link to="/">Home</Link>
+              <Link to="/">{t('productPage.breadcrumb_home')}</Link>
               <span>/</span>
-              <button className="rl-bc-btn" onClick={() => { window.location.href = '/'; setTimeout(() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }), 150) }}>Products</button>
+              <button className="rl-bc-btn" onClick={() => { window.location.href = '/'; setTimeout(() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }), 150) }}>{t('productPage.breadcrumb_products')}</button>
               <span>/</span>
-              <span>Relays</span>
+              <span>{page.breadcrumbCurrent}</span>
             </nav>
 
-            <div className="section-label reveal-blur" style={{'--sr-delay':'0.08s'}}>Network Monitoring · Phase Protection</div>
+            <div className="section-label reveal-blur" style={{'--sr-delay':'0.08s'}}>{page.heroLabel}</div>
             <h1 className="rl-hero-h1 reveal-blur" style={{'--sr-delay':'0.18s'}}>
-              Monitoring<br />
-              <span className="rl-green">Relays</span>
+              {page.heroTitle1}<br />
+              <span className="rl-green">{page.heroTitle2}</span>
             </h1>
-            <p className="rl-hero-desc reveal" style={{'--sr-delay':'0.28s'}}>
-              Reliable network monitoring relays for three-phase systems — undervoltage protection, phase failure detection and phase sequence supervision in a compact DIN rail package. Klaus Bruchmann GmbH, since 1985.
-            </p>
+            <p className="rl-hero-desc reveal" style={{'--sr-delay':'0.28s'}}>{page.heroDesc}</p>
 
             <div className="rl-hero-actions reveal" style={{'--sr-delay':'0.38s'}}>
               <Link to="/kontakt?produkt=Relais" className="btn-primary rl-quote-btn">
-                Request a Quote
+                {t('productPage.request_btn')}
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </Link>
               <a href="#models" className="btn-dark">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                All Datasheets
+                {t('productPage.all_datasheets')}
               </a>
             </div>
 
             <div className="rl-hero-badges reveal-stagger">
-              {['ISO 9001', 'ISO 14001', 'CE / VDE', 'Made in Germany'].map(b => (
+              {page.badges.map(b => (
                 <span key={b} className="rl-badge">{b}</span>
               ))}
             </div>
@@ -118,7 +120,7 @@ export default function Relais() {
             <div
               className="rl-canvas-wrap"
               onClick={() => document.getElementById('rl-explorer')?.scrollIntoView({ behavior: 'smooth' })}
-              title="Click to explore the 3D model"
+              title={t('productPage.hint')}
             >
               <Canvas
                 camera={{ position: [0, 0.5, 7.5], fov: 52 }}
@@ -137,7 +139,7 @@ export default function Relais() {
             </div>
             <div className="rl-3d-hint">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-              Click model · Open interactive viewer
+              {t('productPage.hint')}
             </div>
           </div>
         </div>
@@ -145,12 +147,7 @@ export default function Relais() {
 
       {/* ══ STATS BAR ══ */}
       <div className="rl-stats-bar">
-        {[
-          { v: '6',     l: 'Relay Types'         },
-          { v: '400V',  l: 'Rated Voltage'        },
-          { v: '8A',    l: 'Contact Current'      },
-          { v: '1985',  l: 'Year Founded'         },
-        ].map((s, i) => (
+        {page.stats.map((s, i) => (
           <div key={i} className="rl-stat-item">
             <strong>{s.v}</strong>
             <span>{s.l}</span>
@@ -162,29 +159,29 @@ export default function Relais() {
       <section id="models" className="section rl-models-section">
         <div className="container">
           <div className="section-header reveal-blur">
-            <div className="section-label">Complete Product Range</div>
-            <h2 className="section-title">Network Monitoring Relays</h2>
-            <p className="section-sub">6 monitoring relay types — from all-in-one network supervisors to dedicated undervoltage, phase failure and phase sequence guards.</p>
+            <div className="section-label">{t('productPage.complete_range_label')}</div>
+            <h2 className="section-title">{page.rangeTitle}</h2>
+            <p className="section-sub">{page.rangeSub}</p>
             <div className="rl-ds-strip">
               <div className="rl-ds-strip-item">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                <strong>1</strong> Official PDF Catalog
+                <strong>1</strong> {t('productPage.official_catalog_label')}
               </div>
               <span className="rl-ds-sep" />
               <div className="rl-ds-strip-item">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/></svg>
-                View in browser
+                {t('productPage.view_in_browser')}
               </div>
               <span className="rl-ds-sep" />
               <div className="rl-ds-strip-item">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                Download directly
+                {t('productPage.download_directly')}
               </div>
             </div>
           </div>
 
           <div className="rl-models-grid">
-            {MODELS.map((m, i) => (
+            {page.models.map((m, i) => (
               <div key={m.id} className="rl-model-card reveal" style={{ '--sr-delay': `${i * 0.06}s` }}>
                 <div className="rl-model-icon">
                   <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
@@ -207,7 +204,7 @@ export default function Relais() {
                     style={{ opacity: m.pdf ? 1 : 0.38, cursor: m.pdf ? 'pointer' : 'default' }}
                   >
                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/></svg>
-                    View Datasheet
+                    {t('productPage.view_datasheet')}
                   </button>
                   <a
                     href={m.pdf || '#'}
@@ -232,16 +229,16 @@ export default function Relais() {
         <div className="rl-3d-glow" />
         <div className="container rl-3d-layout">
           <div className="rl-3d-text reveal">
-            <div className="section-label">Interactive Viewer</div>
-            <h2 className="rl-3d-heading">Explore in 3D</h2>
-            <p className="rl-3d-body">Inspect the relay module from every angle. Drag, zoom and pan to examine the DIN rail form factor and connection terminals in detail.</p>
+            <div className="section-label">{t('productPage.viewer_label')}</div>
+            <h2 className="rl-3d-heading">{t('productPage.explore_heading')}</h2>
+            <p className="rl-3d-body">{page.explorerBody}</p>
             <ul className="rl-3d-controls">
-              <li><span>⟳</span> Drag — Rotate</li>
-              <li><span>⊕</span> Scroll — Zoom</li>
-              <li><span>↕</span> Right-drag — Pan</li>
+              <li><span>⟳</span> {t('productPage.drag_rotate')}</li>
+              <li><span>⊕</span> {t('productPage.scroll_zoom')}</li>
+              <li><span>↕</span> {t('productPage.pan')}</li>
             </ul>
             <Link to="/kontakt?produkt=Relais" className="btn-primary rl-quote-btn" style={{ marginTop: 28 }}>
-              Request Technical Info
+              {t('productPage.technical_info_btn')}
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </Link>
           </div>
@@ -249,7 +246,7 @@ export default function Relais() {
           <div className="rl-3d-viewer reveal">
             <div className="rl-viewer-badge">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-              Bruchmann Monitoring Relay
+              {page.viewerBadge}
             </div>
             <Canvas camera={{ position: [0, 1.2, 5], fov: 44 }} gl={{ antialias: true }}>
               <color attach="background" args={['#060d18']} />
@@ -272,22 +269,22 @@ export default function Relais() {
       <section className="section rl-specs-section">
         <div className="container">
           <div className="section-header reveal">
-            <div className="section-label">Technical Data</div>
-            <h2 className="section-title">General Specifications</h2>
-            <p className="section-sub">Key parameters for the Bruchmann monitoring relay range. Refer to the product catalog for complete specifications.</p>
+            <div className="section-label">{t('productPage.specs_section_label')}</div>
+            <h2 className="section-title">{t('productPage.specs_section_title')}</h2>
+            <p className="section-sub">{page.specsSub}</p>
           </div>
           <div className="rl-specs-layout reveal">
             <div className="rl-specs-image-wrap">
-              <img src="/images/products/relays.png" alt="Monitoring Relay" className="rl-specs-img" />
+              <img src="/images/products/relays.png" alt={page.imageAlt} className="rl-specs-img" />
               <div className="rl-specs-img-overlay">
                 <span className="rl-specs-cert">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#13A538" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  ISO 9001 · ISO 14001 Certified
+                  {page.certLabel}
                 </span>
               </div>
             </div>
             <div className="rl-specs-table-wrap">
-              {SPECS.map((s, i) => (
+              {page.specs.map((s, i) => (
                 <div key={i} className="rl-spec-row">
                   <span className="rl-spec-key">{s.key}</span>
                   <span className="rl-spec-val">{s.value}</span>
@@ -302,11 +299,11 @@ export default function Relais() {
       <section className="pp-cta">
         <div className="container pp-cta-inner reveal">
           <div>
-            <h2>Interested in the Relay Range?</h2>
-            <p>Our team will advise you personally — contact us today.</p>
+            <h2>{page.ctaTitle}</h2>
+            <p>{t('productPage.cta_body')}</p>
           </div>
           <Link to="/kontakt?produkt=Relais" className="btn-primary rl-quote-btn">
-            Inquire Now
+            {t('productPage.inquire_btn')}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
@@ -321,19 +318,19 @@ export default function Relais() {
             <div className="ssg-pdf-header">
               <div className="ssg-pdf-title">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
-                {activePdfName} — Datasheet
+                {activePdfName} — {t('productPage.datasheet')}
               </div>
               <div className="ssg-pdf-header-actions">
                 <a href={activePdf} download target="_blank" rel="noreferrer" className="ssg-pdf-dl-btn">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  Download
+                  {t('productPage.download')}
                 </a>
-                <button className="ssg-pdf-close" onClick={closePdf} aria-label="Close">
+                <button className="ssg-pdf-close" onClick={closePdf} aria-label={lang === 'de' ? 'Schließen' : 'Close'}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round"/></svg>
                 </button>
               </div>
             </div>
-            <iframe src={activePdf} className="ssg-pdf-frame" title={`${activePdfName} Datasheet`} />
+            <iframe src={activePdf} className="ssg-pdf-frame" title={`${activePdfName} ${t('productPage.datasheet')}`} />
           </div>
         </div>
       )}

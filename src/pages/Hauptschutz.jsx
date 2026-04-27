@@ -2,6 +2,8 @@ import { Suspense, useRef, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, OrbitControls, ContactShadows, Environment } from '@react-three/drei'
+import { useLanguage } from '../context/LanguageContext'
+import { productDetailContent } from '../content/pageContent'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import './Hauptschutz.css'
 
@@ -63,8 +65,10 @@ function WireFallback() {
 
 export default function Hauptschutz() {
   useScrollReveal()
+  const { lang, t } = useLanguage()
   const [activePdf, setActivePdf]         = useState(null)
   const [activePdfName, setActivePdfName] = useState('')
+  const page = (productDetailContent[lang] || productDetailContent.de).hauptschutz
 
   const openPdf  = (pdf, name) => { if (!pdf) return; setActivePdf(pdf); setActivePdfName(name) }
   const closePdf = () => { setActivePdf(null); setActivePdfName('') }
@@ -79,35 +83,33 @@ export default function Hauptschutz() {
 
           <div className="hs-hero-text">
             <nav className="hs-breadcrumb reveal" style={{'--sr-delay':'0s'}}>
-              <Link to="/">Home</Link>
+              <Link to="/">{t('productPage.breadcrumb_home')}</Link>
               <span>/</span>
-              <button className="hs-bc-btn" onClick={() => { window.location.href = '/'; setTimeout(() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }), 150) }}>Products</button>
+              <button className="hs-bc-btn" onClick={() => { window.location.href = '/'; setTimeout(() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' }), 150) }}>{t('productPage.breadcrumb_products')}</button>
               <span>/</span>
-              <span>Main Protection</span>
+              <span>{page.breadcrumbCurrent}</span>
             </nav>
 
-            <div className="section-label reveal-blur" style={{'--sr-delay':'0.08s'}}>TYTAN® II · RH Series · RJ Monitoring</div>
+            <div className="section-label reveal-blur" style={{'--sr-delay':'0.08s'}}>{page.heroLabel}</div>
             <h1 className="hs-hero-h1 reveal-blur" style={{'--sr-delay':'0.18s'}}>
-              Main<br />
-              <span className="hs-green">Protection</span>
+              {page.heroTitle1}<br />
+              <span className="hs-green">{page.heroTitle2}</span>
             </h1>
-            <p className="hs-hero-desc reveal" style={{'--sr-delay':'0.28s'}}>
-              Modern and safe protection for electrical mains — fully coded fuse plugs, integrated blink indicator, temperature monitoring and Modbus connectivity. Klaus Bruchmann GmbH, since 1985.
-            </p>
+            <p className="hs-hero-desc reveal" style={{'--sr-delay':'0.28s'}}>{page.heroDesc}</p>
 
             <div className="hs-hero-actions reveal" style={{'--sr-delay':'0.38s'}}>
               <Link to="/kontakt?produkt=Hauptschutz" className="btn-primary hs-quote-btn">
-                Request a Quote
+                {t('productPage.request_btn')}
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </Link>
               <a href="#models" className="btn-dark">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                All Datasheets
+                {t('productPage.all_datasheets')}
               </a>
             </div>
 
             <div className="hs-hero-badges reveal-stagger">
-              {['ISO 9001', 'ISO 14001', 'CE / VDE', 'Made in Germany'].map(b => (
+              {page.badges.map(b => (
                 <span key={b} className="hs-badge">{b}</span>
               ))}
             </div>
@@ -121,7 +123,7 @@ export default function Hauptschutz() {
             <div
               className="hs-canvas-wrap"
               onClick={() => document.getElementById('hs-explorer')?.scrollIntoView({ behavior: 'smooth' })}
-              title="Click to explore the 3D model"
+              title={t('productPage.hint')}
             >
               <Canvas
                 camera={{ position: [0, 0.5, 9.5], fov: 48 }}
@@ -140,7 +142,7 @@ export default function Hauptschutz() {
             </div>
             <div className="hs-3d-hint">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-              Click model · Open interactive viewer
+              {t('productPage.hint')}
             </div>
           </div>
         </div>
@@ -148,12 +150,7 @@ export default function Hauptschutz() {
 
       {/* ══ STATS BAR ══ */}
       <div className="hs-stats-bar">
-        {[
-          { v: '9',    l: 'Product Models'    },
-          { v: '160A', l: 'Max Rated Current' },
-          { v: '400V', l: 'System Voltage'    },
-          { v: '1985', l: 'Year Founded'      },
-        ].map((s, i) => (
+        {page.stats.map((s, i) => (
           <div key={i} className="hs-stat-item">
             <strong>{s.v}</strong>
             <span>{s.l}</span>
@@ -165,29 +162,29 @@ export default function Hauptschutz() {
       <section id="models" className="section hs-models-section">
         <div className="container">
           <div className="section-header reveal-blur">
-            <div className="section-label">Complete Product Range</div>
-            <h2 className="section-title">TYTAN® II &amp; RH Series</h2>
-            <p className="section-sub">9 specialist main protection models — from compact single-unit monitoring to full Modbus network integration.</p>
+            <div className="section-label">{t('productPage.complete_range_label')}</div>
+            <h2 className="section-title">{page.rangeTitle}</h2>
+            <p className="section-sub">{page.rangeSub}</p>
             <div className="hs-ds-strip">
               <div className="hs-ds-strip-item">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                <strong>9</strong> Official PDF Datasheets
+                <strong>9</strong> {t('productPage.official_datasheets_label')}
               </div>
               <span className="hs-ds-sep" />
               <div className="hs-ds-strip-item">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/></svg>
-                View in browser
+                {t('productPage.view_in_browser')}
               </div>
               <span className="hs-ds-sep" />
               <div className="hs-ds-strip-item">
                 <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                Download directly
+                {t('productPage.download_directly')}
               </div>
             </div>
           </div>
 
           <div className="hs-models-grid">
-            {MODELS.map((m, i) => (
+            {page.models.map((m, i) => (
               <div key={m.id} className="hs-model-card reveal" style={{ '--sr-delay': `${i * 0.07}s` }}>
                 <div className="hs-model-icon">
                   <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
@@ -208,7 +205,7 @@ export default function Hauptschutz() {
                     style={{ opacity: m.pdf ? 1 : 0.38, cursor: m.pdf ? 'pointer' : 'default' }}
                   >
                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.5"/></svg>
-                    View Datasheet
+                    {t('productPage.view_datasheet')}
                   </button>
                   <a
                     href={m.pdf || '#'}
@@ -233,16 +230,16 @@ export default function Hauptschutz() {
         <div className="hs-3d-glow" />
         <div className="container hs-3d-layout">
           <div className="hs-3d-text reveal">
-            <div className="section-label">Interactive Viewer</div>
-            <h2 className="hs-3d-heading">Explore in 3D</h2>
-            <p className="hs-3d-body">Inspect the main protection unit from every angle. Drag, zoom and pan to examine the construction in detail.</p>
+            <div className="section-label">{t('productPage.viewer_label')}</div>
+            <h2 className="hs-3d-heading">{t('productPage.explore_heading')}</h2>
+            <p className="hs-3d-body">{page.explorerBody}</p>
             <ul className="hs-3d-controls">
-              <li><span>⟳</span> Drag — Rotate</li>
-              <li><span>⊕</span> Scroll — Zoom</li>
-              <li><span>↕</span> Right-drag — Pan</li>
+              <li><span>⟳</span> {t('productPage.drag_rotate')}</li>
+              <li><span>⊕</span> {t('productPage.scroll_zoom')}</li>
+              <li><span>↕</span> {t('productPage.pan')}</li>
             </ul>
             <Link to="/kontakt?produkt=Hauptschutz" className="btn-primary hs-quote-btn" style={{ marginTop: 28 }}>
-              Request Technical Info
+              {t('productPage.technical_info_btn')}
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </Link>
           </div>
@@ -250,7 +247,7 @@ export default function Hauptschutz() {
           <div className="hs-3d-viewer reveal">
             <div className="hs-viewer-badge">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-              TYTAN® II Main Protection Unit
+              {page.viewerBadge}
             </div>
             <Canvas camera={{ position: [0, 1.2, 5], fov: 44 }} gl={{ antialias: true }}>
               <color attach="background" args={['#060d18']} />
@@ -273,22 +270,22 @@ export default function Hauptschutz() {
       <section className="section hs-specs-section">
         <div className="container">
           <div className="section-header reveal">
-            <div className="section-label">Technical Data</div>
-            <h2 className="section-title">General Specifications</h2>
-            <p className="section-sub">Key parameters for the TYTAN® II main protection system. Refer to individual datasheets for model-specific values.</p>
+            <div className="section-label">{t('productPage.specs_section_label')}</div>
+            <h2 className="section-title">{t('productPage.specs_section_title')}</h2>
+            <p className="section-sub">{page.specsSub}</p>
           </div>
           <div className="hs-specs-layout reveal">
             <div className="hs-specs-image-wrap">
-              <img src="/images/products/main_protection.png" alt="Main Protection" className="hs-specs-img" />
+              <img src="/images/products/main_protection.png" alt={page.imageAlt} className="hs-specs-img" />
               <div className="hs-specs-img-overlay">
                 <span className="hs-specs-cert">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#13A538" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  ISO 9001 · ISO 14001 Certified
+                  {page.certLabel}
                 </span>
               </div>
             </div>
             <div className="hs-specs-table-wrap">
-              {SPECS.map((s, i) => (
+              {page.specs.map((s, i) => (
                 <div key={i} className="hs-spec-row">
                   <span className="hs-spec-key">{s.key}</span>
                   <span className="hs-spec-val">{s.value}</span>
@@ -303,11 +300,11 @@ export default function Hauptschutz() {
       <section className="pp-cta">
         <div className="container pp-cta-inner reveal">
           <div>
-            <h2>Interested in Main Protection?</h2>
-            <p>Our team will advise you personally — contact us today.</p>
+            <h2>{page.ctaTitle}</h2>
+            <p>{t('productPage.cta_body')}</p>
           </div>
           <Link to="/kontakt?produkt=Hauptschutz" className="btn-primary hs-quote-btn">
-            Inquire Now
+            {t('productPage.inquire_btn')}
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
@@ -322,19 +319,19 @@ export default function Hauptschutz() {
             <div className="ssg-pdf-header">
               <div className="ssg-pdf-title">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
-                {activePdfName} — Datasheet
+                {activePdfName} — {t('productPage.datasheet')}
               </div>
               <div className="ssg-pdf-header-actions">
                 <a href={activePdf} download target="_blank" rel="noreferrer" className="ssg-pdf-dl-btn">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 7l3 3 3-3M3 12h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  Download
+                  {t('productPage.download')}
                 </a>
-                <button className="ssg-pdf-close" onClick={closePdf} aria-label="Close">
+                <button className="ssg-pdf-close" onClick={closePdf} aria-label={lang === 'de' ? 'Schließen' : 'Close'}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round"/></svg>
                 </button>
               </div>
             </div>
-            <iframe src={activePdf} className="ssg-pdf-frame" title={`${activePdfName} Datasheet`} />
+            <iframe src={activePdf} className="ssg-pdf-frame" title={`${activePdfName} ${t('productPage.datasheet')}`} />
           </div>
         </div>
       )}

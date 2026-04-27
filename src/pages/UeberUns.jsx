@@ -33,9 +33,7 @@ function useTimelineAnimation() {
   })
 }
 
-const ACC_SUBTITLES = ['Product Range & Expertise', 'Quality & Innovation', 'Purpose & Values']
-
-function Accordion({ items }) {
+function Accordion({ items, subtitles }) {
   const [open, setOpen] = useState(0)
   return (
     <div className="uu-accordion">
@@ -45,7 +43,7 @@ function Accordion({ items }) {
             <span className="uu-acc-num">0{i + 1}</span>
             <span className="uu-acc-title-wrap">
               <span className="uu-acc-title">{item.title}</span>
-              <span className="uu-acc-subtitle">{ACC_SUBTITLES[i]}</span>
+              <span className="uu-acc-subtitle">{subtitles[i]}</span>
             </span>
             <span className="uu-acc-icon">{open === i ? '−' : '+'}</span>
           </button>
@@ -62,7 +60,7 @@ function Accordion({ items }) {
   )
 }
 
-function SideVideo() {
+function SideVideo({ editorial, lang }) {
   const videoRef = useRef(null)
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
@@ -110,7 +108,7 @@ function SideVideo() {
         />
         {/* Play overlay shown when paused */}
         {!playing && (
-          <button className="uu-side-play-overlay" onClick={togglePlay} aria-label="Play">
+          <button className="uu-side-play-overlay" onClick={togglePlay} aria-label={lang === 'de' ? 'Abspielen' : 'Play'}>
             <div className="uu-side-play-btn">
               <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor">
                 <path d="M5 3l14 8L5 19V3z"/>
@@ -120,14 +118,14 @@ function SideVideo() {
         )}
         {/* Controls bar */}
         <div className="uu-side-controls">
-          <button className="uu-side-ctrl-btn" onClick={togglePlay} aria-label="Play/Pause">
+          <button className="uu-side-ctrl-btn" onClick={togglePlay} aria-label={lang === 'de' ? 'Abspielen/Pausieren' : 'Play/Pause'}>
             {playing
               ? <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect x="2" y="1" width="3" height="12" rx="1"/><rect x="9" y="1" width="3" height="12" rx="1"/></svg>
               : <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M3 1l10 6L3 13V1z"/></svg>
             }
           </button>
           <div className="uu-side-ctrl-spacer" />
-          <button className="uu-side-ctrl-btn" onClick={toggleMute} aria-label="Mute">
+          <button className="uu-side-ctrl-btn" onClick={toggleMute} aria-label={lang === 'de' ? 'Stummschalten' : 'Mute'}>
             {muted
               ? <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M1 5h3l4-3v10l-4-3H1V5z"/><path d="M10 4l3 3m0-3l-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none"/></svg>
               : <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M1 5h3l4-3v10l-4-3H1V5z"/><path d="M10 4a4 4 0 010 6" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round"/></svg>
@@ -141,8 +139,8 @@ function SideVideo() {
         <div className="uu-side-caption-icon">⚡</div>
         <div className="uu-side-caption-text">
           <span className="uu-side-caption-year">1985 – 2025</span>
-          <h3 className="uu-side-caption-title">40 Years Bruchmann!</h3>
-          <p className="uu-side-caption-sub">Trusted specialist in electrical safety — made in Germany.</p>
+          <h3 className="uu-side-caption-title">{editorial.side_caption_title}</h3>
+          <p className="uu-side-caption-sub">{editorial.side_caption_sub}</p>
         </div>
       </div>
     </div>
@@ -150,7 +148,7 @@ function SideVideo() {
 }
 
 export default function UeberUns() {
-  const { t } = useLanguage()
+  const { lang, t } = useLanguage()
   useScrollReveal()
   useTimelineAnimation()
 
@@ -162,6 +160,8 @@ export default function UeberUns() {
   const timelineItems = t('about.timeline_items')
   const accordion = t('about.accordion')
   const cta = t('about.cta')
+  const accSubtitles = t('about.accordion_subtitles')
+  const editorial = t('about.editorial')
 
   return (
     <main>
@@ -200,18 +200,18 @@ export default function UeberUns() {
 
         {/* Top header banner — full width */}
         <div className="uu-acc-section-header reveal-blur">
-          <div className="section-label">Who We Are</div>
-          <h2>The <em>Spirit</em> Behind the Brand</h2>
-          <p>Forty years of commitment — to quality, to safety, and to you.</p>
+          <div className="section-label">{editorial.label}</div>
+          <h2>{editorial.title_before} <em>{editorial.title_accent}</em> {editorial.title_after}</h2>
+          <p>{editorial.subtitle}</p>
         </div>
 
         {/* Side-by-side content */}
         <div className="uu-split-wrap">
           <div className="uu-split-left reveal-left">
-            <Accordion items={accordion} />
+            <Accordion items={accordion} subtitles={accSubtitles} />
           </div>
           <div className="uu-split-right reveal-right">
-            <SideVideo />
+            <SideVideo editorial={editorial} lang={lang} />
           </div>
         </div>
 
@@ -228,10 +228,10 @@ export default function UeberUns() {
           <div className="uu-ceo-video reveal-scale">
             {/* Floating badges */}
             <div className="uu-ceo-badge uu-ceo-badge-top">
-              <span>⚡</span> CEO Message
+              <span>⚡</span> {editorial.ceo_badge}
             </div>
             <div className="uu-ceo-badge uu-ceo-badge-bottom">
-              <span className="uu-ceo-live-dot" /> 40 Years
+              <span className="uu-ceo-live-dot" /> {editorial.ceo_years}
             </div>
 
             {/* Phone frame */}
@@ -245,7 +245,7 @@ export default function UeberUns() {
                   style={{border:'none', overflow:'hidden', display:'block', width:'100%', height:'100%'}}
                   allowFullScreen
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                  title="CEO Speech"
+                  title={editorial.ceo_badge}
                 />
               </div>
               <div className="uu-ceo-phone-chin" />
@@ -258,24 +258,22 @@ export default function UeberUns() {
           {/* Right — text */}
           <div className="uu-ceo-text reveal-left">
             <div className="uu-ceo-label-row">
-              <span className="uu-ceo-pill">Leadership</span>
-              <span className="uu-ceo-year-tag">Since 1985</span>
+              <span className="uu-ceo-pill">{editorial.ceo_pill}</span>
+              <span className="uu-ceo-year-tag">{editorial.ceo_since}</span>
             </div>
 
             <h2 className="uu-ceo-heading">
-              A Word<br/>
-              <span className="uu-ceo-heading-accent">From Our</span><br/>
-              CEO
+              {editorial.ceo_heading_1}<br/>
+              <span className="uu-ceo-heading-accent">{editorial.ceo_heading_2}</span><br/>
+              {editorial.ceo_heading_3}
             </h2>
 
-            <p className="uu-ceo-desc">
-              Klaus Bruchmann shares his vision on safety, innovation, and what it means to build a company that has protected people for over four decades.
-            </p>
+            <p className="uu-ceo-desc">{editorial.ceo_desc}</p>
 
             <div className="uu-ceo-quote-block">
               <div className="uu-ceo-quote-line" />
               <blockquote>
-                "Safety carries our name — it is our promise, our standard, and our purpose every single day."
+                "{editorial.ceo_quote}"
               </blockquote>
             </div>
 
@@ -283,7 +281,7 @@ export default function UeberUns() {
               <div className="uu-ceo-avatar">KB</div>
               <div className="uu-ceo-author-info">
                 <strong>Klaus Bruchmann</strong>
-                <span>Founder & CEO · Klaus Bruchmann GmbH</span>
+                <span>{editorial.ceo_role}</span>
               </div>
               <div className="uu-ceo-author-arrow">→</div>
             </div>
@@ -305,10 +303,9 @@ export default function UeberUns() {
             <p>{mission.p1}</p>
             <p className="uu-mission-p2">{mission.p2}</p>
             <div className="uu-mission-trust">
-              <span>✓ ISO 9001</span>
-              <span>✓ ISO 14001</span>
-              <span>✓ Est. 1985</span>
-              <span>✓ 25M+ Products</span>
+              {editorial.trust_badges.map((badge) => (
+                <span key={badge}>{badge}</span>
+              ))}
             </div>
           </div>
           <div className="uu-values reveal-stagger">
