@@ -7,6 +7,7 @@ import Footer from './components/Footer'
 import FloatingContact from './components/FloatingContact'
 import MessengerChat from './components/MessengerChat'
 import Loader from './components/Loader'
+import SeoManager from './components/SeoManager'
 import Home from './pages/Home'
 import Sicherungsschaltgeraete from './pages/Sicherungsschaltgeraete'
 import Hauptschutz from './pages/Hauptschutz'
@@ -40,6 +41,7 @@ export default function App() {
   return (
     <ThemeProvider>
     <LanguageProvider>
+      <SeoManager pathname={pathname} />
       {loading && <Loader onDone={handleLoaderDone} />}
       <div id="scroll-progress" />
       <Navbar />

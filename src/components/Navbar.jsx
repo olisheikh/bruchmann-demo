@@ -66,6 +66,12 @@ export default function Navbar() {
         </Link>
 
         <nav className={`navbar-nav ${menuOpen ? 'open' : ''}`}>
+          <button className="mobile-nav-back" onClick={() => setMenuOpen(false)} aria-label={t('nav.back')}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            {t('nav.back')}
+          </button>
           <NavLink to="/" className="nav-link" onClick={() => setMenuOpen(false)}>{t('nav.home')}</NavLink>
           <NavLink to="/ueber-uns" className="nav-link" onClick={() => setMenuOpen(false)}>{t('nav.about')}</NavLink>
           <div

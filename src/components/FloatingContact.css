@@ -98,13 +98,15 @@
 }
 
 /* ── Mobile — circles at bottom-right, tap to act ── */
-@media (max-width: 540px) {
+@media (max-width: 900px) {
   .floating-contact {
     top: auto;
-    bottom: 80px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
     right: 12px;
     transform: none;
+    flex-direction: row;
     gap: 10px;
+    max-width: calc(100vw - 24px);
   }
   .float-icon {
     border-radius: 50%;
@@ -113,5 +115,17 @@
   }
   .float-label {
     display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .floating-contact {
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    gap: 8px;
+  }
+  .float-icon {
+    width: 44px;
+    height: 44px;
   }
 }

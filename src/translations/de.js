@@ -6,6 +6,7 @@ export default {
     careers: 'Karriere',
     contact: 'Kontakt aufnehmen',
     menu: 'Menü',
+    back: 'Zurück',
   },
 
   footer: {
